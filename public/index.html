@@ -3,147 +3,271 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StudySync - Task Manager</title>
+  <title>StudySync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>📚 StudySync</h1>
-      <p class="subtitle">Stay organized. Stay ahead.</p>
-    </header>
+<body data-theme="light">
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
 
-    <nav class="nav-tabs">
-      <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
-      <button class="nav-btn" data-tab="assignments">All Tasks</button>
-      <button class="nav-btn" data-tab="prioritized">Prioritized</button>
-      <button class="nav-btn" data-tab="create">Create Task</button>
-      <button class="nav-btn" data-tab="calendar">Calendar</button>
-    </nav>
-
-    <!-- Dashboard Tab -->
-    <section id="dashboard" class="tab-content active">
-      <div class="dashboard-grid">
-        <div class="card">
-          <h3>📊 Stats</h3>
-          <div class="stat">
-            <span class="stat-label">Total Tasks:</span>
-            <span class="stat-value" id="stat-total">0</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Completed:</span>
-            <span class="stat-value" id="stat-completed">0</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Due Soon:</span>
-            <span class="stat-value urgent" id="stat-due-soon">0</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>🔔 Notifications</h3>
-          <div id="notifications-widget"></div>
-        </div>
-
-        <div class="card">
-          <h3>⚡ Top Priority</h3>
-          <div id="top-priority"></div>
+  <main class="shell">
+    <section id="auth-view" class="auth-view">
+      <div class="auth-hero">
+        <p class="eyebrow">Canvas-connected planner</p>
+        <h1>StudySync keeps coursework, deadlines, and calendar events in one place.</h1>
+        <p class="hero-copy">Sign in to manage your own workspace, import Canvas data on demand, and switch between light and dark themes without losing your setup.</p>
+        <div class="hero-points">
+          <div class="hero-point">Per-user task and calendar data</div>
+          <div class="hero-point">Server-side Canvas token protection</div>
+          <div class="hero-point">Manual planning plus Canvas imports</div>
         </div>
       </div>
-    </section>
 
-    <!-- All Assignments Tab -->
-    <section id="assignments" class="tab-content">
-      <h2>All Tasks</h2>
-      <div id="assignments-list" class="assignments-list"></div>
-    </section>
+      <div class="auth-panel">
+        <div class="auth-toggle">
+          <button class="toggle-btn active" data-auth-mode="login">Sign In</button>
+          <button class="toggle-btn" data-auth-mode="register">Create Account</button>
+        </div>
 
-    <!-- Prioritized Tab -->
-    <section id="prioritized" class="tab-content">
-      <h2>Prioritized Task List</h2>
-      <div id="prioritized-list" class="assignments-list"></div>
-    </section>
+        <form id="login-form" class="auth-form active">
+          <h2>Welcome back</h2>
+          <label>
+            <span>Email</span>
+            <input type="email" id="login-email" required placeholder="student@example.edu">
+          </label>
+          <label>
+            <span>Password</span>
+            <input type="password" id="login-password" required placeholder="At least 8 characters">
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        </form>
 
-    <!-- Create Task Tab -->
-    <section id="create" class="tab-content">
-      <h2>Create New Task</h2>
-      <form id="create-form" class="form">
-        <div class="form-group">
-          <label>Task Title *</label>
-          <input type="text" id="form-title" required placeholder="e.g., ETI 421 Project">
-        </div>
-        <div class="form-group">
-          <label>Course Code *</label>
-          <input type="text" id="form-course" required placeholder="e.g., ETI 421">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Due Date *</label>
-            <input type="datetime-local" id="form-due-date" required>
-          </div>
-          <div class="form-group">
-            <label>Priority</label>
-            <select id="form-priority">
-              <option value="low">Low</option>
-              <option value="medium" selected>Medium</option>
-              <option value="high">High</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Estimated Hours</label>
-            <input type="number" id="form-hours" min="1" max="24" value="5">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Instructions</label>
-          <textarea id="form-instructions" placeholder="Any additional details..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Create Task</button>
-        <button type="button" class="btn btn-secondary" id="load-demo">Load Demo Data</button>
-      </form>
-    </section>
-
-    <!-- Calendar Tab -->
-    <section id="calendar" class="tab-content">
-      <h2>Calendar Events</h2>
-      
-      <div style="margin-bottom: 30px;">
-        <h3>Add Event</h3>
-        <form id="create-event-form" class="form">
-          <div class="form-group">
-            <label>Event Title *</label>
-            <input type="text" id="form-event-title" required placeholder="e.g., Linear Algebra Lecture">
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Start Time *</label>
-              <input type="datetime-local" id="form-event-start" required>
-            </div>
-            <div class="form-group">
-              <label>End Time</label>
-              <input type="datetime-local" id="form-event-end">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Event Type</label>
-            <select id="form-event-type">
-              <option value="lecture">Lecture</option>
-              <option value="lab">Lab</option>
-              <option value="meeting">Meeting</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary">Add Event</button>
+        <form id="register-form" class="auth-form">
+          <h2>Create your workspace</h2>
+          <label>
+            <span>Name</span>
+            <input type="text" id="register-name" required placeholder="Jordan Doe">
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" id="register-email" required placeholder="student@example.edu">
+          </label>
+          <label>
+            <span>Password</span>
+            <input type="password" id="register-password" required placeholder="Use at least 8 characters">
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Create Account</button>
         </form>
       </div>
-
-      <h3>Upcoming Events</h3>
-      <div id="calendar-list" class="events-list"></div>
     </section>
-  </div>
 
+    <section id="app-view" class="app-view hidden">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Personal academic command center</p>
+          <h1>StudySync</h1>
+          <p id="welcome-copy" class="subtitle"></p>
+        </div>
+
+        <div class="header-actions">
+          <button id="theme-toggle" class="btn btn-secondary" type="button">Dark mode</button>
+          <button id="logout-btn" class="btn btn-ghost" type="button">Log out</button>
+        </div>
+      </header>
+
+      <section class="hero-grid">
+        <article class="spotlight-card">
+          <p class="card-kicker">Dashboard</p>
+          <h2>Plan what matters next.</h2>
+          <p>Track upcoming work, mix in Canvas imports, and keep a clear view of what is urgent across classes.</p>
+          <div class="spotlight-stats">
+            <div>
+              <span class="metric-label">Open tasks</span>
+              <strong id="stat-total">0</strong>
+            </div>
+            <div>
+              <span class="metric-label">Completed</span>
+              <strong id="stat-completed">0</strong>
+            </div>
+            <div>
+              <span class="metric-label">Due soon</span>
+              <strong id="stat-due-soon">0</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="canvas-card">
+          <div class="card-row">
+            <div>
+              <p class="card-kicker">Canvas</p>
+              <h2>Sync your LMS</h2>
+            </div>
+            <button id="canvas-sync-btn" class="btn btn-primary" type="button">Sync Now</button>
+          </div>
+          <label>
+            <span>Canvas Base URL</span>
+            <input type="url" id="canvas-base-url" placeholder="https://your-school.instructure.com">
+          </label>
+          <label>
+            <span>Canvas API Key</span>
+            <input type="password" id="canvas-api-key" placeholder="Paste your Canvas token to save it server-side">
+          </label>
+          <div class="canvas-actions">
+            <button id="canvas-save-btn" class="btn btn-secondary" type="button">Save URL</button>
+            <p id="canvas-status" class="muted">Canvas is not configured yet.</p>
+          </div>
+        </article>
+      </section>
+
+      <nav class="nav-tabs">
+        <button class="nav-btn active" data-tab="dashboard">Overview</button>
+        <button class="nav-btn" data-tab="assignments">Tasks</button>
+        <button class="nav-btn" data-tab="prioritized">Priority Queue</button>
+        <button class="nav-btn" data-tab="create">Add Task</button>
+        <button class="nav-btn" data-tab="calendar">Calendar</button>
+      </nav>
+
+      <section id="dashboard" class="tab-content active">
+        <div class="dashboard-grid">
+          <article class="card">
+            <div class="card-row">
+              <h3>Notifications</h3>
+              <span class="pill">Live</span>
+            </div>
+            <div id="notifications-widget" class="stack-list"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-row">
+              <h3>Top Priority</h3>
+              <span class="pill">Focus</span>
+            </div>
+            <div id="top-priority" class="stack-list"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-row">
+              <h3>Upcoming Events</h3>
+              <span class="pill">Calendar</span>
+            </div>
+            <div id="dashboard-events" class="stack-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="assignments" class="tab-content">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Tasks</p>
+            <h2>All assignments</h2>
+          </div>
+        </div>
+        <div id="assignments-list" class="assignments-list"></div>
+      </section>
+
+      <section id="prioritized" class="tab-content">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Priority Queue</p>
+            <h2>Recommended next work</h2>
+          </div>
+        </div>
+        <div id="prioritized-list" class="assignments-list"></div>
+      </section>
+
+      <section id="create" class="tab-content">
+        <div class="dashboard-grid form-grid">
+          <article class="card">
+            <p class="eyebrow">Manual task</p>
+            <h2>Create new task</h2>
+            <form id="create-form" class="form">
+              <label>
+                <span>Task title</span>
+                <input type="text" id="form-title" required placeholder="ETI 421 Project">
+              </label>
+              <label>
+                <span>Course code</span>
+                <input type="text" id="form-course" required placeholder="ETI 421">
+              </label>
+              <div class="form-row">
+                <label>
+                  <span>Due date</span>
+                  <input type="datetime-local" id="form-due-date" required>
+                </label>
+                <label>
+                  <span>Priority</span>
+                  <select id="form-priority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                <span>Estimated hours</span>
+                <input type="number" id="form-hours" min="1" max="24" value="5">
+              </label>
+              <label>
+                <span>Instructions</span>
+                <textarea id="form-instructions" placeholder="Any details, checkpoints, or notes"></textarea>
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Task</button>
+                <button type="button" class="btn btn-secondary" id="load-demo">Load Demo Data</button>
+              </div>
+            </form>
+          </article>
+
+          <article class="card">
+            <p class="eyebrow">Calendar</p>
+            <h2>Add event</h2>
+            <form id="create-event-form" class="form">
+              <label>
+                <span>Event title</span>
+                <input type="text" id="form-event-title" required placeholder="Linear Algebra Lecture">
+              </label>
+              <div class="form-row">
+                <label>
+                  <span>Start time</span>
+                  <input type="datetime-local" id="form-event-start" required>
+                </label>
+                <label>
+                  <span>End time</span>
+                  <input type="datetime-local" id="form-event-end">
+                </label>
+              </div>
+              <label>
+                <span>Event type</span>
+                <select id="form-event-type">
+                  <option value="lecture">Lecture</option>
+                  <option value="lab">Lab</option>
+                  <option value="meeting">Meeting</option>
+                  <option value="study">Study Session</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+              <button type="submit" class="btn btn-primary">Add Event</button>
+            </form>
+          </article>
+        </div>
+      </section>
+
+      <section id="calendar" class="tab-content">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Schedule</p>
+            <h2>Upcoming events</h2>
+          </div>
+        </div>
+        <div id="calendar-list" class="events-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
   <script src="js/app.js"></script>
 </body>
 </html>

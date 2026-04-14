@@ -7,6 +7,12 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "data/*.json",
+      ".env"
+    ]
+  },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
